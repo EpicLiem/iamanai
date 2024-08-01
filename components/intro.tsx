@@ -1,29 +1,31 @@
-"use client"
-
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select"
-import { useRouter } from 'next/navigation'
+"use client";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
+import { useRouter } from 'next/navigation';
 
 export default function Intro() {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [isHowToPlayOpen, setIsHowToPlayOpen] = useState(false)
-  const [numBots, setNumBots] = useState(2)
-  const [isGameStarted, setIsGameStarted] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isHowToPlayOpen, setIsHowToPlayOpen] = useState(false);
+  const [numBots, setNumBots] = useState(4);
+  const [selectedCharacter, setSelectedCharacter] = useState("Marie Curie");
+  const [isGameStarted, setIsGameStarted] = useState(false);
 
-  const router = useRouter()
-  const handleSettingsClick = () => setIsSettingsOpen(true)
-  const handleCloseSettings = () => setIsSettingsOpen(false)
-  const handleHowToPlayClick = () => setIsHowToPlayOpen(true)
-  const handleCloseHowToPlay = () => setIsHowToPlayOpen(false)
-  const handleNumBotsChange = (value) => setNumBots(Number(value))
+  const router = useRouter();
+
+  const handleSettingsClick = () => setIsSettingsOpen(true);
+  const handleCloseSettings = () => setIsSettingsOpen(false);
+  const handleHowToPlayClick = () => setIsHowToPlayOpen(true);
+  const handleCloseHowToPlay = () => setIsHowToPlayOpen(false);
+  const handleNumBotsChange = (value) => setNumBots(Number(value));
+  const handleCharacterChange = (value) => setSelectedCharacter(value);
   const handleStartGame = () => {
-    router.push(`/chat?numBots=${numBots}`);
+    router.push(`/chat?numBots=${numBots}&selectedCharacter=${selectedCharacter}`);
     setIsGameStarted(true);
   };
 
   if (isGameStarted) {
-    return <div />
+    return <div />;
   }
 
   return (
@@ -36,7 +38,6 @@ export default function Intro() {
           opacity: 0.1,
         }}
       />
-
       <div
         className="relative flex items-center justify-center bg-cover bg-center"
         style={{
@@ -74,7 +75,7 @@ export default function Intro() {
                   -3px -3px 0 #000, 
                   3px -3px 0 #000, 
                   -3px 3px 0 #000`,
-                transform: 'rotate(-5deg) skew(-10deg)'
+                transform: 'rotate(-5deg) skew(-10deg)',
               }}
             >
               Eclipse of the Desolate Abyss
@@ -88,7 +89,7 @@ export default function Intro() {
                   -2px -2px 0 #000, 
                   2px -2px 0 #000, 
                   -2px 2px 0 #000`,
-                transform: 'rotate(-5deg) skew(-10deg)'
+                transform: 'rotate(-5deg) skew(-10deg)',
               }}
             >
               Whispers from the Forgotten Realm
@@ -143,6 +144,34 @@ export default function Intro() {
                   </SelectContent>
                 </Select>
               </div>
+              <div>
+                <label htmlFor="character-select" className="block font-['RobotoMono', 'monospace'] text-secondary-foreground">
+                  Select Your Character
+                </label>
+                <Select value={selectedCharacter} onValueChange={handleCharacterChange}>
+                  <SelectTrigger className="bg-transparent border rounded-lg px-4 py-2 text-secondary-foreground font-['RobotoMono', 'monospace']">
+                    {selectedCharacter}
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[
+                      "Abraham Lincoln",
+                      "Cleopatra",
+                      "Albert Einstein",
+                      "Marie Curie",
+                      "Mahatma Gandhi",
+                      "Leonardo da Vinci",
+                      "Joan of Arc",
+                      "Winston Churchill",
+                      "Galileo Galilei",
+                      "Nelson Mandela"
+                    ].map((character) => (
+                      <SelectItem key={character} value={character}>
+                        {character}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <Button
                 className="inline-flex items-center text-base font-['RobotoMono', 'monospace'] font-medium text-secondary-foreground transition-colors hover:text-secondary-foreground/90 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 bg-transparent border rounded-lg px-5 py-2 w-full"
                 onClick={handleCloseSettings}
@@ -167,10 +196,11 @@ export default function Intro() {
               identify which participant is not an AI.
             </p>
             <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
-              Your objective is to deceive the AIs and prevent them from uncovering your true identity.
+              Your objective is to deceive the AIs and avoid being identified as a human. Use your character's traits and
+              responses to blend in seamlessly.
             </p>
             <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
-              If you don't need to speak, you can press a button in the lower left to make another AI speak on your behalf.
+              Press the button in the lower-left corner if you want to make another AI speak for you.
             </p>
             <Button
               className="inline-flex items-center text-base font-['RobotoMono', 'monospace'] font-medium text-secondary-foreground transition-colors hover:text-secondary-foreground/90 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 bg-transparent border rounded-lg px-5 py-2 w-full"
@@ -182,5 +212,5 @@ export default function Intro() {
         </div>
       )}
     </div>
-  )
+  );
 }
