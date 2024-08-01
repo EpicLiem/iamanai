@@ -24,19 +24,33 @@ export default function Intro() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="relative flex flex-col min-h-screen">
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/background2.jpg')",
+          zIndex: -1,
+          opacity: 0.1,
+        }}
+      />
+
       <div
         className="relative flex items-center justify-center bg-cover bg-center"
         style={{
           backgroundImage: "url('/img_1.png')",
-          height: "32vh",
+          height: "20vh",
           padding: "20px",
           marginTop: "210px",
+          opacity: 1,
         }}
       >
         <div
-          className="absolute inset-0 bg-black/0"
-          style={{ height: "100%", width: "100%" }}
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(to bottom, rgba(30, 30, 30, 0.7) 50%, rgba(30, 30, 30, 0.4) 100%)",
+            height: "100%",
+            width: "100%",
+          }}
         />
         <div className="relative flex flex-col items-center justify-center text-center z-10 mt-16">
           <div
@@ -44,31 +58,36 @@ export default function Intro() {
             style={{
               maxWidth: "100%",
               padding: "0px",
-              marginTop: "0px",  // Adjust to move the background down
-              marginBottom: "65px", // Adjust to move the background up
+              marginTop: "0px",
+              marginBottom: "65px",
             }}
           >
-            <h1 className="text-5xl font-['RobotoMono', 'monospace'] mb-2"
-            style={{
-              textShadow: `
-                3px 3px 0 #000, 
-                -3px -3px 0 #000, 
-                3px -3px 0 #000, 
-                -3px 3px 0 #000`,
-              transform: 'rotate(-5deg) skew(-10deg)'
-            }}
-          >
-            Eclipse of the Desolate Abyss
-          </h1>
-            <p className="text-2xl font-['RobotoMono', 'monospace']"
-                style={{
-                  textShadow: `
-                    2px 2px 0 #000, 
-                    -2px -2px 0 #000, 
-                    2px -2px 0 #000, 
-                    -2px 2px 0 #000`,
-                  transform:  'rotate(-5deg) skew(-10deg)'
-                }}>
+            <h1
+              className="text-5xl font-['RobotoMono', 'monospace'] mb-2"
+              style={{
+                color: "#ffeb57",
+                textShadow: `
+                  3px 3px 0 #000, 
+                  -3px -3px 0 #000, 
+                  3px -3px 0 #000, 
+                  -3px 3px 0 #000`,
+                transform: 'rotate(-5deg) skew(-10deg)'
+              }}
+            >
+              Eclipse of the Desolate Abyss
+            </h1>
+            <p
+              className="text-2xl font-['RobotoMono', 'monospace']"
+              style={{
+                color: "#ffeb57",
+                textShadow: `
+                  2px 2px 0 #000, 
+                  -2px -2px 0 #000, 
+                  2px -2px 0 #000, 
+                  -2px 2px 0 #000`,
+                transform: 'rotate(-5deg) skew(-10deg)'
+              }}
+            >
               Whispers from the Forgotten Realm
             </p>
           </div>
