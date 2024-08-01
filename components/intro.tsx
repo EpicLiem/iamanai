@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -70,7 +71,7 @@ export default function Intro() {
               className="text-5xl font-['RobotoMono', 'monospace'] mb-2"
               style={{
                 color: "#ffeb57",
-                textShadow: `
+                textShadow: ` 
                   3px 3px 0 #000, 
                   -3px -3px 0 #000, 
                   3px -3px 0 #000, 

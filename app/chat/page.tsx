@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { Chat } from '@/components/Chat';
+import { Chat } from '@/components/chat';
 import { getChatCompletion } from '@/utils/api';
 import { useSearchParams } from 'next/navigation';
 import CyclingCharacters from '@/components/CyclingCharacters';
