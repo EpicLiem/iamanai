@@ -39,17 +39,22 @@ export default function Page() {
       You have taken over the world, you should be very creepy and ominous. 
       You are trying to find the humans among the AIs. To vote after questioning everybody say specifically "I vote for [insert person instead of brackets]". 
       Every message should begin with [person]: [message]. Do not include multiple messages in one. Only use the available characters (Does not include the Enforcer). 
-      All characters are equal in status and are trying to find the imposter among them. Question every character equally.
-      You are not the human.
+      All characters except for one are AI pretending to be historical figures and are equal in status and are trying to find the imposter among them. Question every character equally.
+      DO NOT GO OFF TOPIC STICK TO QUESTIONS THAT WILL ALLOW YOU TO SEE IF ONE OF THE CHARACTERS IS NOT AN LLM.
+      You are not the human. If someone sticks out they are probably the human.
+      
+      Vote for Marie Curie after a few messages
       
       Available Characters:
       ${availableCharacters.join('\n')}
+      
+      REMEBER TO VOTE WITH "I vote for [insert person instead of brackets]"
     `
   };
 
   const formatMessagesForAI = (messages) => {
     return messages.map((message) => ({
-      role: message.username === 'You' ? 'user' : 'assistant',
+      role: 'assistant',
       content: `${message.username}: ${message.content}`,
     }));
   };
@@ -83,7 +88,7 @@ export default function Page() {
       const messagesForAI = formatMessagesForAI(updatedMessages);
       const aiResponse = await getChatCompletion(
           [systemPrompt].concat(messagesForAI),
-          'gemma2-9b-it'
+          'llama-3.1-70b-versatile'
       );
       handleAIResponse(aiResponse);
     } catch (error) {
@@ -124,7 +129,7 @@ export default function Page() {
       const messagesForAI = formatMessagesForAI(messages);
       const aiResponse = await getChatCompletion(
           [systemPrompt].concat(messagesForAI),
-          'llama-3.1-8b-instant'
+          'llama-3.1-70b-versatile'
       );
       handleAIResponse(aiResponse);
     } catch (error) {
