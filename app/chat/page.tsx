@@ -1,9 +1,9 @@
 "use client";
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Chat } from '@/components/chat';
 import { getChatCompletion } from '@/utils/api';
 import { useSearchParams } from 'next/navigation';
-import CyclingCharacters from '@/components/CyclingCharacters';
+import CyclingCharacters from '@/components/cyclingcharacters';
 
 const characterList = [
   "Abraham Lincoln",
@@ -26,12 +26,12 @@ export default function Page() {
     content: "I am the Enforcer. One among you is human. Identify the human and present them to me, or all of you will face execution. Choose wisely.",
     avatarFallback: "AI"
   }]);
-  const [numBots, setNumBots] = useState(parseInt(searchParams.get('numBots'), 10) || 2);
+  const [numBots, setNumBots] = useState(parseInt(searchParams.get('numBots'), 10) || 4);
   const [selectedCharacter, setSelectedCharacter] = useState(searchParams.get('selectedCharacter') || "Marie Curie");
-  const chatEndRef = useRef(null);
+  const [votes, setVotes] = useState({});
+  const [alert, setAlert] = useState(null);
 
   const availableCharacters = characterList.filter(character => character !== selectedCharacter);
-  const botsList = availableCharacters.slice(0, numBots);
 
   const systemPrompt = {
     role: 'system',
@@ -39,10 +39,11 @@ export default function Page() {
       You have taken over the world, you should be very creepy and ominous. 
       You are trying to find the humans among the AIs. To vote after questioning everybody say specifically "I vote for [insert person instead of brackets]". 
       Every message should begin with [person]: [message]. Do not include multiple messages in one. Only use the available characters (Does not include the Enforcer). 
-      All characters are equal in status and are trying to find the imposter among them.
+      All characters are equal in status and are trying to find the imposter among them. Question every character equally.
+      You are not the human.
       
       Available Characters:
-      ${botsList.join('\n')}
+      ${availableCharacters.join('\n')}
     `
   };
 
@@ -64,6 +65,7 @@ export default function Page() {
     return {
       username: <CyclingCharacters />,
       content: message,
+      avatar: '/MOSHED-2024-8-1-15-32-32.gif'
     };
   };
 
@@ -80,21 +82,40 @@ export default function Page() {
     try {
       const messagesForAI = formatMessagesForAI(updatedMessages);
       const aiResponse = await getChatCompletion(
-        [systemPrompt].concat(messagesForAI),
-        'llama-3.1-8b-instant'
+          [systemPrompt].concat(messagesForAI),
+          'gemma2-9b-it'
       );
-      const parsed = parseMessage(aiResponse);
-      if (parsed.username !== selectedCharacter) {
-        const aiMessage = {
-          username: parsed.username,
-          timestamp: 'Synthetic',
-          content: parsed.content,
-          avatarFallback: 'AI',
-        };
-        setMessages((prevMessages) => [...prevMessages, aiMessage]);
-      }
+      handleAIResponse(aiResponse);
     } catch (error) {
       console.error('Error:', error);
+    }
+  };
+
+  const handleAIResponse = (aiResponse) => {
+    const parsed = parseMessage(aiResponse);
+    if (parsed.content.startsWith("I vote for")) {
+      const votedCharacter = parsed.content.replace("I vote for ", "").trim();
+      setVotes((prevVotes) => {
+        const newVotes = { ...prevVotes, [votedCharacter]: (prevVotes[votedCharacter] || 0) + 1 };
+        const totalVotes = Object.values(newVotes).reduce((sum, count) => sum + count, 0);
+        if (totalVotes >= numBots) {
+          if (newVotes[selectedCharacter] > (totalVotes / 2)) {
+            setAlert("You have been identified as the human. You lose!");
+          } else {
+            setAlert("The AI did not identify you. You win!");
+          }
+        }
+        return newVotes;
+      });
+    } else {
+      const aiMessage = {
+        username: parsed.username,
+        timestamp: 'Synthetic',
+        content: parsed.content,
+        avatarFallback: 'AI',
+        avatar: parsed.avatar,
+      };
+      setMessages((prevMessages) => [...prevMessages, aiMessage]);
     }
   };
 
@@ -102,36 +123,39 @@ export default function Page() {
     try {
       const messagesForAI = formatMessagesForAI(messages);
       const aiResponse = await getChatCompletion(
-        [systemPrompt].concat(messagesForAI),
-        'llama-3.1-8b-instant'
+          [systemPrompt].concat(messagesForAI),
+          'llama-3.1-8b-instant'
       );
-      const parsed = parseMessage(aiResponse);
-      if (parsed.username !== selectedCharacter) {
-        const aiMessage = {
-          username: parsed.username,
-          timestamp: 'Synthetic',
-          content: parsed.content,
-          avatarFallback: 'AI',
-        };
-        setMessages((prevMessages) => [...prevMessages, aiMessage]);
-      }
+      handleAIResponse(aiResponse);
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  const closeAlert = () => {
+    setAlert(null);
+  };
 
   return (
-    <Chat
-      messages={messages.map((message) => ({
-        ...message,
-        timestamp: <CyclingCharacters />
-      }))}
-      onSendMessage={handleSendMessage}
-      onSendRobotMessage={handleSendRobotMessage}
-    />
+      <>
+        {alert && (
+            <div className="fixed bottom-24 right-4 z-50 bg-red-500 text-white p-3 rounded-md">
+              <div className="flex items-center justify-between">
+                <span>{alert}</span>
+                <button onClick={closeAlert} className="ml-2 text-sm underline">
+                  Close
+                </button>
+              </div>
+            </div>
+        )}
+        <Chat
+            messages={messages.map((message) => ({
+              ...message,
+              timestamp: <CyclingCharacters />
+            }))}
+            onSendMessage={handleSendMessage}
+            onSendRobotMessage={handleSendRobotMessage}
+        />
+      </>
   );
 }

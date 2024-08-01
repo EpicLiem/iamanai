@@ -53,11 +53,11 @@ function MessageList({ messages }) {
     );
 }
 
-function Message({ username, timestamp, content, avatarFallback }) {
+function Message({ username, timestamp, content, avatarFallback, avatar=null }) {
     return (
         <div className="flex items-start gap-4">
             <Avatar className="w-10 h-10 border">
-                <AvatarImage src="/placeholder-user.jpg" />
+                <AvatarImage src={avatar ? avatar : "/placeholder-user.jpg"} />
                 <AvatarFallback>{avatarFallback}</AvatarFallback>
             </Avatar>
             <div className="grid gap-1.5">
