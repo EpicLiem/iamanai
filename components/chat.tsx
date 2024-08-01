@@ -119,20 +119,24 @@ function RobotIcon(props) {
     return (
         <svg
             {...props}
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http://www.w3.org/1999/svg"
             width="24"
             height="24"
-            viewBox="0 0 24 24"
-            fill="none"
+            viewBox="0 0 57.006 57.006"
+            fill="currentColor"
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
         >
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-            <path d="M6 7V4a2 2 0 0 1 4 0v3" />
-            <path d="M14 7V4a2 2 0 1 1 4 0v3" />
-            <circle cx="12" cy="14" r="3" />
+            <g xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M57.006,57.006H28.503C12.786,57.006,0,44.22,0,28.503S12.786,0,28.503,0s28.503,12.786,28.503,28.503V57.006z M28.503,4   C14.992,4,4,14.992,4,28.503s10.992,24.503,24.503,24.503h24.503V28.503C53.006,14.992,42.014,4,28.503,4z"/>
+                <circle cx="42.657" cy="28.503" r="4.206"/>
+                <circle cx="28.503" cy="28.504" r="4.207"/>
+                <circle cx="14.348" cy="28.503" r="4.206"/>
+            </g>
         </svg>
+
     );
 }
