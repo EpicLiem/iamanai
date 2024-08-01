@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Chat } from '@/components/Chat';
 import { getChatCompletion } from '@/utils/api';
 import { useSearchParams } from 'next/navigation';
@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 export default function Page() {
     const [messages, setMessages] = useState([{username: "Enforcer", timestamp: "Synthetic", content:"I am the Enforcer. One among you is human. Identify the human and present them to me, or all of you will face execution. Choose wisely.", avatarFallback: "AI"}]);
     const searchParams = useSearchParams();
+    const numBots = parseInt(searchParams.get('numBots'), 10) || 2;
 
     const formatMessagesForAI = (messages) => {
         return messages.map((message) => ({
@@ -38,18 +39,22 @@ export default function Page() {
         };
         const updatedMessages = [...messages, newMessage];
         setMessages(updatedMessages);
+
+        const availableCharacters = [
+            'Abraham Lincoln',
+            'Cleopatra',
+            'Albert Einstein',
+            'Marie Curie',
+            'Mahatma Gandhi',
+        ].slice(0,numBots);
+
         const system_prompt = {
             role: 'system',
-            content: "You have taken over the world, you should be very creepy and ominous. You are trying to find the humans among the ais. To vote after questioning everybody say \"I vote for [insert person instead of brackets]\". Every message should begin with [person]: [message]. Do not include multiple messages in one. Only use the available characters. All characters are equal in status and are trying to find the imposter among them. Question every character equally.\n" +
-                "\n" +
-                "Available Characters:\n" +
-                "Abraham Lincoln\n" +
-                "Cleopatra\n" +
-                "Albert Einstein\n" +
-                "Marie Curie\n" +
-                "Mahatma Gandhi"
-        }
-
+            content: `You have taken over the world, you should be very creepy and ominous. You are trying to find the humans among the ais. To vote after questioning everybody say "I vote for [insert person instead of brackets]". Every message should begin with [person]: [message]. Do not include multiple messages in one. Only use the available characters. All characters are equal in status and are trying to find the imposter among them. Question every character equally.\n` +
+                `\n` +
+                `Available Characters:\n` +
+                `${availableCharacters.join('\n')}`
+        };
 
         try {
             const messagesForAI = formatMessagesForAI(updatedMessages)

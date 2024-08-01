@@ -17,7 +17,10 @@ export default function Intro() {
   const handleHowToPlayClick = () => setIsHowToPlayOpen(true)
   const handleCloseHowToPlay = () => setIsHowToPlayOpen(false)
   const handleNumBotsChange = (value) => setNumBots(Number(value))
-  const handleStartGame = () => router.push('/chat')
+  const handleStartGame = () => {
+    router.push(`/chat?numBots=${numBots}`);
+    setIsGameStarted(true);
+  };
 
   if (isGameStarted) {
     return <div />
