@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Chat } from '@/components/chat';
 import { getChatCompletion } from '@/utils/api';
 import { useSearchParams } from 'next/navigation';
-import CyclingCharacters from '@/components/CyclingCharacters';
+import CyclingCharacters from '@/components/cyclingcharacters';
 
 const characterList = [
   "Abraham Lincoln",
