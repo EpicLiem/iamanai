@@ -3,7 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { useState } from 'react';
 
-export function Chat({ messages, onSendMessage }) {
+export function Chat({ messages, onSendMessage, onSendRobotMessage }) {
     const [input, setInput] = useState('');
 
     const handleSubmit = async (e) => {
@@ -22,6 +22,7 @@ export function Chat({ messages, onSendMessage }) {
                 input={input}
                 setInput={setInput}
                 handleSubmit={handleSubmit}
+                onSendRobotMessage={onSendRobotMessage}
             />
         </div>
     );
@@ -31,7 +32,7 @@ function Header() {
     return (
         <div className="border-b p-4 flex items-center justify-between gap-4 sticky top-0 bg-background z-10">
             <div>
-                <div className="font-medium">Plato's Republic</div>
+                <div className="font-medium">Neural Network Network</div>
                 <div className="text-sm text-muted-foreground">Online</div>
             </div>
             <div className="space-x-4">
@@ -69,10 +70,10 @@ function Message({ username, timestamp, content, avatarFallback }) {
     );
 }
 
-function MessageInput({ input, setInput, handleSubmit }) {
+function MessageInput({ input, setInput, handleSubmit, onSendRobotMessage }) {
     return (
-        <div className="border-t p-4 flex-shrink-0 sticky bottom-0 bg-background z-10">
-            <form className="flex items-center gap-2" onSubmit={handleSubmit}>
+        <div className="border-t p-4 flex-shrink-0 sticky bottom-0 bg-background z-10 flex items-center gap-2">
+            <form className="flex items-center gap-2 flex-1" onSubmit={handleSubmit}>
                 <Input
                     placeholder="Type your message..."
                     value={input}
@@ -80,15 +81,16 @@ function MessageInput({ input, setInput, handleSubmit }) {
                     className="flex-1 px-3 py-2 text-sm bg-transparent rounded-lg focus-visible:ring-0 ring-0 focus-visible:ring-offset-0"
                 />
                 <Button type="submit" variant="ghost" size="icon">
-                    <SendIcon className="h-5 w-5" />
+                    <SendIcon className="h-5 w-5"/>
                     <span className="sr-only">Send</span>
                 </Button>
-                <Button variant="ghost" size="icon">
-                    <RobotIcon className="h-5 w-5" />
-                    <span className="sr-only">Robot</span>
-                </Button>
             </form>
+            <Button type="button" variant="ghost" size="icon" onClick={onSendRobotMessage}>
+                <RobotIcon className="h-5 w-5"/>
+                <span className="sr-only">Robot</span>
+            </Button>
         </div>
+
     );
 }
 
@@ -106,8 +108,8 @@ function SendIcon(props) {
             strokeLinecap="round"
             strokeLinejoin="round"
         >
-            <path d="m22 2-7 20-4-9-9-4Z" />
-            <path d="M22 2 11 13" />
+            <path d="m22 2-7 20-4-9-9-4Z"/>
+            <path d="M22 2 11 13"/>
         </svg>
     );
 }
