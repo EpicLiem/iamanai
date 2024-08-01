@@ -183,34 +183,39 @@ export default function Intro() {
         </div>
       )}
 
-      {isHowToPlayOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
-          <div className="bg-[#1a1b1e] rounded-lg p-8 w-full max-w-md">
-            <h2 className="text-2xl font-['RobotoMono', 'monospace'] text-secondary-foreground mb-4">How to Play</h2>
-            <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
-              In this game, you are tasked with blending in as an AI within a simulated social media chat. Your goal is
-              to act like an AI and avoid detection by other AIs.
-            </p>
-            <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
-              Engage in the conversation naturally and be cautious about how you respond. The other AIs will try to
-              identify which participant is not an AI.
-            </p>
-            <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
-              Your objective is to deceive the AIs and avoid being identified as a human. Use your character's traits and
-              responses to blend in seamlessly.
-            </p>
-            <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
-              Press the button in the lower-left corner if you want to make another AI speak for you.
-            </p>
-            <Button
-              className="inline-flex items-center text-base font-['RobotoMono', 'monospace'] font-medium text-secondary-foreground transition-colors hover:text-secondary-foreground/90 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 bg-transparent border rounded-lg px-5 py-2 w-full"
-              onClick={handleCloseHowToPlay}
-            >
-              Close
-            </Button>
-          </div>
-        </div>
-      )}
+{isHowToPlayOpen && (
+  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
+    <div className="bg-[#1a1b1e] rounded-lg p-8 w-full max-w-md">
+      <h2 className="text-2xl font-['RobotoMono', 'monospace'] text-secondary-foreground mb-4">How to Play</h2>
+      <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
+        In this game, you are tasked with blending in as an AI within a simulated social media chat. Your goal is
+        to act like an AI and avoid detection by other AIs.
+      </p>
+      <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
+        Engage in the conversation naturally and be cautious about how you respond. The other AIs will try to
+        identify which participant is not an AI.
+      </p>
+      <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
+        Your objective is to deceive the AIs and avoid being identified as a human. Use your character's traits and
+        responses to blend in seamlessly.
+      </p>
+      <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
+        You can select your character and the number of bots in the settings menu. By default, you start off as Marie Curie.
+      </p>
+      <p className="text-secondary-foreground transition-colors hover:text-secondary-foreground/90 mb-4">
+        Press the button in the lower-right corner if you have nothing to say, and another AI will speak instead.
+      </p>
+      <Button
+        className="inline-flex items-center text-base font-['RobotoMono', 'monospace'] font-medium text-secondary-foreground transition-colors hover:text-secondary-foreground/90 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 bg-transparent border rounded-lg px-5 py-2 w-full"
+        onClick={handleCloseHowToPlay}
+      >
+        Close
+      </Button>
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 }
