@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Chat } from '@/components/Chat';
 import { getChatCompletion } from '@/utils/api';
 import { useSearchParams } from 'next/navigation';
+import CyclingCharacters from '@/components/CyclingCharacters';
 
 const characterList = [
   "Abraham Lincoln",
@@ -35,9 +36,10 @@ export default function Page() {
     role: 'system',
     content: `
       You have taken over the world, you should be very creepy and ominous. 
-      You are trying to find the humans among the AIs. To vote after questioning everybody say "I vote for [insert person instead of brackets]". 
+      You are trying to find the humans among the AIs. To vote after questioning everybody say specifically "I vote for [insert person instead of brackets]". 
       Every message should begin with [person]: [message]. Do not include multiple messages in one. Only use the available characters (Does not include the Enforcer). 
       All characters are equal in status and are trying to find the imposter among them. Question every character equally.
+      You are not the human.
       
       Available Characters:
       ${availableCharacters.join('\n')}
@@ -78,8 +80,8 @@ export default function Page() {
     try {
       const messagesForAI = formatMessagesForAI(updatedMessages);
       const aiResponse = await getChatCompletion(
-        [systemPrompt].concat(messagesForAI),
-        'llama-3.1-8b-instant'
+          [systemPrompt].concat(messagesForAI),
+          'llama-3.1-8b-instant'
       );
       const parsed = parseMessage(aiResponse);
       if (parsed.username === selectedCharacter) {
@@ -102,8 +104,8 @@ export default function Page() {
     try {
       const messagesForAI = formatMessagesForAI(messages);
       const aiResponse = await getChatCompletion(
-        [systemPrompt].concat(messagesForAI),
-        'llama-3.1-8b-instant'
+          [systemPrompt].concat(messagesForAI),
+          'llama-3.1-8b-instant'
       );
       const parsed = parseMessage(aiResponse);
       if (parsed.username === selectedCharacter) {
@@ -127,22 +129,25 @@ export default function Page() {
   };
 
   return (
-    <>
-      {alert && (
-        <div className="fixed bottom-24 right-4 z-50 bg-red-500 text-white p-3 rounded-md">
-          <div className="flex items-center justify-between">
-            <span>AI attempted to speak as you: {alert}</span>
-            <button onClick={closeAlert} className="ml-2 text-sm underline">
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-      <Chat
-        messages={messages}
-        onSendMessage={handleSendMessage}
-        onSendRobotMessage={handleSendRobotMessage}
-      />
-    </>
+      <>
+        {alert && (
+            <div className="fixed bottom-24 right-4 z-50 bg-red-500 text-white p-3 rounded-md">
+              <div className="flex items-center justify-between">
+                <span>AI attempted to speak as you: {alert}</span>
+                <button onClick={closeAlert} className="ml-2 text-sm underline">
+                  Close
+                </button>
+              </div>
+            </div>
+        )}
+        <Chat
+            messages={messages.map((message) => ({
+              ...message,
+              timestamp: <CyclingCharacters />
+            }))}
+            onSendMessage={handleSendMessage}
+            onSendRobotMessage={handleSendRobotMessage}
+        />
+      </>
   );
 }
