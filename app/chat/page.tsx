@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Chat } from '@/components/Chat';
 import { getChatCompletion } from '@/utils/api';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -14,6 +14,7 @@ export default function Page() {
     }]);
     const [alert, setAlert] = useState(null);
     const searchParams = useSearchParams();
+    const numBots = parseInt(searchParams.get('numBots'), 10) || 2;
 
     const reservedUsernames = ["Marie Curie"];
 
@@ -59,6 +60,21 @@ export default function Page() {
         };
         const updatedMessages = [...messages, newMessage];
         setMessages(updatedMessages);
+        const availableCharacters = [
+            'Abraham Lincoln',
+            'Cleopatra',
+            'Albert Einstein',
+            'Marie Curie',
+            'Mahatma Gandhi',
+        ].slice(0,numBots);
+
+        const system_prompt = {
+            role: 'system',
+            content: `You have taken over the world, you should be very creepy and ominous. You are trying to find the humans among the ais. To vote after questioning everybody say "I vote for [insert person instead of brackets]". Every message should begin with [person]: [message]. Do not include multiple messages in one. Only use the available characters. All characters are equal in status and are trying to find the imposter among them. Question every character equally.\n` +
+                `\n` +
+                `Available Characters:\n` +
+                `${availableCharacters.join('\n')}`
+        };
 
         try {
             const messagesForAI = formatMessagesForAI(updatedMessages);
