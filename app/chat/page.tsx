@@ -132,7 +132,7 @@ export default function Page() {
             {alert && (
                 <div className="fixed bottom-24 right-4 z-50 bg-red-500 text-white p-3 rounded-md">
                     <div className="flex items-center justify-between">
-                        <span>Reserved Username: {alert}</span>
+                        <span>AI attempted to speak as you: {alert}</span>
                         <button onClick={closeAlert} className="ml-2 text-sm underline">
                             Close
                         </button>
