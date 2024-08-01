@@ -49,6 +49,7 @@ export default function Page() {
       ${availableCharacters.join('\n')}
       
       REMEBER TO VOTE WITH "I vote for [insert person instead of brackets]"
+      After a majority of people vote for the same person the human or ai will lose
     `
   };
 
@@ -88,7 +89,7 @@ export default function Page() {
       const messagesForAI = formatMessagesForAI(updatedMessages);
       const aiResponse = await getChatCompletion(
           [systemPrompt].concat(messagesForAI),
-          'llama-3.1-70b-versatile'
+          'llama-3.1-8b-instant'
       );
       handleAIResponse(aiResponse);
     } catch (error) {
@@ -129,7 +130,7 @@ export default function Page() {
       const messagesForAI = formatMessagesForAI(messages);
       const aiResponse = await getChatCompletion(
           [systemPrompt].concat(messagesForAI),
-          'llama-3.1-70b-versatile'
+          'llama-3.1-8b-instant'
       );
       handleAIResponse(aiResponse);
     } catch (error) {
