@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Chat } from '@/components/chat';
 import { getChatCompletion } from '@/utils/api';
 import { useSearchParams } from 'next/navigation';
-import CyclingCharacters from '@/components/cyclingcharacters';
+import CyclingCharacters from '@/components/CyclingCharacters';
 
 const characterList = [
   "Abraham Lincoln",
@@ -26,11 +26,12 @@ export default function Page() {
     content: "I am the Enforcer. One among you is human. Identify the human and present them to me, or all of you will face execution. Choose wisely.",
     avatarFallback: "AI"
   }]);
-  const [numBots, setNumBots] = useState(parseInt(searchParams.get('numBots'), 10) || 4);
+  const [numBots, setNumBots] = useState(parseInt(searchParams.get('numBots'), 10) || 2);
   const [selectedCharacter, setSelectedCharacter] = useState(searchParams.get('selectedCharacter') || "Marie Curie");
-  const [alert, setAlert] = useState(null);
+  const chatEndRef = useRef(null);
 
   const availableCharacters = characterList.filter(character => character !== selectedCharacter);
+  const botsList = availableCharacters.slice(0, numBots);
 
   const systemPrompt = {
     role: 'system',
@@ -38,11 +39,10 @@ export default function Page() {
       You have taken over the world, you should be very creepy and ominous. 
       You are trying to find the humans among the AIs. To vote after questioning everybody say specifically "I vote for [insert person instead of brackets]". 
       Every message should begin with [person]: [message]. Do not include multiple messages in one. Only use the available characters (Does not include the Enforcer). 
-      All characters are equal in status and are trying to find the imposter among them. Question every character equally.
-      You are not the human.
+      All characters are equal in status and are trying to find the imposter among them.
       
       Available Characters:
-      ${availableCharacters.join('\n')}
+      ${botsList.join('\n')}
     `
   };
 
@@ -80,13 +80,11 @@ export default function Page() {
     try {
       const messagesForAI = formatMessagesForAI(updatedMessages);
       const aiResponse = await getChatCompletion(
-          [systemPrompt].concat(messagesForAI),
-          'llama-3.1-8b-instant'
+        [systemPrompt].concat(messagesForAI),
+        'llama-3.1-8b-instant'
       );
       const parsed = parseMessage(aiResponse);
-      if (parsed.username === selectedCharacter) {
-        setAlert(parsed.username);
-      } else {
+      if (parsed.username !== selectedCharacter) {
         const aiMessage = {
           username: parsed.username,
           timestamp: 'Synthetic',
@@ -104,13 +102,11 @@ export default function Page() {
     try {
       const messagesForAI = formatMessagesForAI(messages);
       const aiResponse = await getChatCompletion(
-          [systemPrompt].concat(messagesForAI),
-          'llama-3.1-8b-instant'
+        [systemPrompt].concat(messagesForAI),
+        'llama-3.1-8b-instant'
       );
       const parsed = parseMessage(aiResponse);
-      if (parsed.username === selectedCharacter) {
-        setAlert(parsed.username);
-      } else {
+      if (parsed.username !== selectedCharacter) {
         const aiMessage = {
           username: parsed.username,
           timestamp: 'Synthetic',
@@ -124,30 +120,18 @@ export default function Page() {
     }
   };
 
-  const closeAlert = () => {
-    setAlert(null);
-  };
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   return (
-      <>
-        {alert && (
-            <div className="fixed bottom-24 right-4 z-50 bg-red-500 text-white p-3 rounded-md">
-              <div className="flex items-center justify-between">
-                <span>AI attempted to speak as you: {alert}</span>
-                <button onClick={closeAlert} className="ml-2 text-sm underline">
-                  Close
-                </button>
-              </div>
-            </div>
-        )}
-        <Chat
-            messages={messages.map((message) => ({
-              ...message,
-              timestamp: <CyclingCharacters />
-            }))}
-            onSendMessage={handleSendMessage}
-            onSendRobotMessage={handleSendRobotMessage}
-        />
-      </>
+    <Chat
+      messages={messages.map((message) => ({
+        ...message,
+        timestamp: <CyclingCharacters />
+      }))}
+      onSendMessage={handleSendMessage}
+      onSendRobotMessage={handleSendRobotMessage}
+    />
   );
 }
