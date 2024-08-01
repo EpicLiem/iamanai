@@ -5,7 +5,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function POST(request) {
     const { messages, model } = await request.json();
-
+    console.log(messages)
     try {
         const chatCompletion = await groq.chat.completions.create({
             messages,

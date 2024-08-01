@@ -2,34 +2,64 @@
 import { useState } from 'react';
 import { Chat } from '@/components/Chat';
 import { getChatCompletion } from '@/utils/api';
+import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState([{username: "Enforcer", timestamp: "Synthetic", content:"I am the Enforcer. One among you is human. Identify the human and present them to me, or all of you will face execution. Choose wisely.", avatarFallback: "AI"}]);
+    const searchParams = useSearchParams();
 
     const formatMessagesForAI = (messages) => {
         return messages.map((message) => ({
+            role: 'assistant',
             content: message.content,
         }));
+    };
+
+    const parseMessage = (message) => {
+        const match = message.match(/^\[(.+?)\]:\s*(.*)$/);
+        if (match) {
+            return {
+                username: match[1],
+                content: match[2],
+            };
+        }
+        return {
+            username: 'Unknown',
+            content: message,
+        };
     };
 
     const handleSendMessage = async (content) => {
         const newMessage = {
             username: 'You',
-            timestamp: 'just now',
-            content,
+            timestamp: 'Human',
+            content: content,
             avatarFallback: 'YOU',
         };
         const updatedMessages = [...messages, newMessage];
         setMessages(updatedMessages);
+        const system_prompt = {
+            role: 'system',
+            content: "You have taken over the world, you should be very creepy and ominous. You are trying to find the humans among the ais. To vote after questioning everybody say \"I vote for [insert person instead of brackets]\". Every message should begin with [person]: [message]. Do not include multiple messages in one. Only use the available characters. All characters are equal in status and are trying to find the imposter among them. Question every character equally.\n" +
+                "\n" +
+                "Available Characters:\n" +
+                "Abraham Lincoln\n" +
+                "Cleopatra\n" +
+                "Albert Einstein\n" +
+                "Marie Curie\n" +
+                "Mahatma Gandhi"
+        }
+
 
         try {
+            const messagesForAI = formatMessagesForAI(updatedMessages)
             const aiResponse = await getChatCompletion(
-                formatMessagesForAI(updatedMessages),
-                'mixtral-8x7b-32768'
+                [system_prompt].concat(messagesForAI),
+                'llama-3.1-70b-versatile'
             );
             const aiMessage = {
                 username: 'AI',
-                timestamp: 'just now',
+                timestamp: 'Synthetic',
                 content: aiResponse,
                 avatarFallback: 'AI',
             };
@@ -43,11 +73,11 @@ export default function Page() {
         try {
             const aiResponse = await getChatCompletion(
                 formatMessagesForAI(messages),
-                'mixtral-8x7b-32768'
+                'llama-3.1-70b-versatile'
             );
             const aiMessage = {
                 username: 'AI',
-                timestamp: 'just now',
+                timestamp: 'Synthetic',
                 content: aiResponse,
                 avatarFallback: 'AI',
             };

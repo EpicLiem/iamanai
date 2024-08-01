@@ -3,6 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { useState } from 'react';
 
+
 export function Chat({ messages, onSendMessage, onSendRobotMessage }) {
     const [input, setInput] = useState('');
 

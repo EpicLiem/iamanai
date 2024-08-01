@@ -28,8 +28,8 @@ export default function Intro() {
       <div
         className="relative flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: "url('/homescreen.jpg')",
-          height: "18vh",
+          backgroundImage: "url('/img_1.png')",
+          height: "32vh",
           padding: "20px",
           marginTop: "210px",
         }}
@@ -55,7 +55,7 @@ export default function Intro() {
                 -3px -3px 0 #000, 
                 3px -3px 0 #000, 
                 -3px 3px 0 #000`,
-              transform: 'rotate(-7deg) skew(-10deg)'
+              transform: 'rotate(-5deg) skew(-10deg)'
             }}
           >
             Eclipse of the Desolate Abyss
@@ -67,7 +67,7 @@ export default function Intro() {
                     -2px -2px 0 #000, 
                     2px -2px 0 #000, 
                     -2px 2px 0 #000`,
-                  transform:  'rotate(-7deg) skew(-10deg)'
+                  transform:  'rotate(-5deg) skew(-10deg)'
                 }}>
               Whispers from the Forgotten Realm
             </p>
