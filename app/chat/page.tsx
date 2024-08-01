@@ -62,7 +62,7 @@ export default function Page() {
       };
     }
     return {
-      username: 'Unknown',
+      username: <CyclingCharacters />,
       content: message,
     };
   };
