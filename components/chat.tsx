@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { useState } from 'react';
+import { useRouter} from "next/navigation";
 
 
 export function Chat({ messages, onSendMessage, onSendRobotMessage }) {
@@ -30,6 +31,11 @@ export function Chat({ messages, onSendMessage, onSendRobotMessage }) {
 }
 
 function Header() {
+    const router = useRouter()
+
+    const handleclick = async () => {
+        router.push('/')
+    }
     return (
         <div className="border-b p-4 flex items-center justify-between gap-4 sticky top-0 bg-background z-10">
             <div>
@@ -37,7 +43,7 @@ function Header() {
                 <div className="text-sm text-muted-foreground">Online</div>
             </div>
             <div className="space-x-4">
-                <Button>New Game</Button>
+                <Button onClick={handleclick}>Home</Button>
             </div>
         </div>
     );
