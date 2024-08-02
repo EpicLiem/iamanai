@@ -4,7 +4,6 @@ import { Bricolage_Grotesque } from 'next/font/google'
 import { Space_Mono } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import './globals.css'
-import BackgroundMusic from "@/components/BackgroundMusic";
 
 const fontHeading = Bricolage_Grotesque({
     subsets: ['latin'],
@@ -18,6 +17,15 @@ const fontBody = Space_Mono({
     display: 'swap',
     variable: '--font-body',
 })
+
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Eclipse',
+    description: 'Eclipse of the Desolate Abyss\n' +
+        '\n' +
+        'Whispers from the Forgotten Realm',
+}
 
 export default function Layout({ children }) {
     return (
